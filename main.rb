@@ -5,6 +5,9 @@ class CashRegister
     @products = format_products(products_raw)
   end
 
+  def show_receipt
+
+  end
 
   private
   def format_products(products_raw)
@@ -30,11 +33,23 @@ class CashRegister
 
     false
   end
+
+  def calculate_taxes(product)
+    imported = product[:imported] ? 0.05 : 0.0
+    base = product[:exception] ? 0.0 : 0.1
+
+    return round_to_50((imported + base) * product[:quantity] * product[:value])
+  end
+
+  def round_to_50(amount)
+    decimal_floor = amount.floor(1)
+    last_decimal = (amount - decimal_floor)% 1
+    decimal_rounded = 0.05
+
+    decimal_rounded = 0.0 if last_decimal < 0.025
+    decimal_rounded = 0.1 if last_decimal > 0.075
+
+    return (decimal_floor + decimal_rounded).round(2)
+  end
 end
 
-x = CashRegister.new([
-  "1 imported box of chocolates at 10.00",
-  "1 imported bottle of perfume at 47.50"
-])
-
-pp x.products
