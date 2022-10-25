@@ -1,69 +1,29 @@
-class CashRegister
-  attr_reader :products
+require "./cash_register"
 
-  def initialize(products_raw)
-    @products = format_products(products_raw)
+
+def init
+  puts "Welcome to the market"
+  puts "Hi, describe your product, if you don't need write 'no'"
+  
+  
+  raw = gets.chomp
+  products = [raw]
+
+  while raw != "no"
+    puts "What else?"
+    raw = gets.chomp
+    products << raw if raw != "no"
   end
 
-  def show_receipt
-    taxes = 0.0
-    amount = 0.0
-    output = []
 
-    @products.each do |product| 
-      product_tax = calculate_taxes(product)
-      taxes += product_tax
-      amount += product[:value]
-      output.append("#{product[:quantity]} #{product[:name]}: #{'%.2f' % (product_tax + product[:value])}")
-    end
+  puts "This is your reciept:"
+  register = CashRegister.new(products)
 
-    output.append("Sales Taxes: #{taxes}")
-    output.append("Total: #{amount + taxes}")
-    pp output
-    output
-  end
-
-  private
-  def format_products(products_raw)
-    products_raw.map do |product|
-      products_arr = product.split
-       {
-        quantity: products_arr.first().to_i,
-        imported: products_arr.include?('imported'),
-        exception: isAnException?(product),
-        name:  products_arr.slice(1, products_arr.length - 3).join(' '),
-        value: products_arr.last().to_f
-      }
-    end
-  end
-
-  def isAnException?(product)
-    all_exceptions = [
-      'chocolate',
-      'pill',
-      'book',
-    ]
-    all_exceptions.each { |p_expection| return true if product.include?(p_expection) }
-
-    false
-  end
-
-  def calculate_taxes(product)
-    imported = product[:imported] ? 0.05 : 0.0
-    base = product[:exception] ? 0.0 : 0.1
-
-    return round_to_50((imported + base) * product[:quantity] * product[:value])
-  end
-
-  def round_to_50(amount)
-    decimal_floor = amount.floor(1)
-    last_decimal = (amount - decimal_floor)% 1
-    decimal_rounded = 0.05
-
-    decimal_rounded = 0.0 if last_decimal < 0.025
-    decimal_rounded = 0.1 if last_decimal > 0.075
-
-    return (decimal_floor + decimal_rounded).round(2)
-  end
+  puts "-"*50
+  puts register.show_receipt()
+  puts "-"*50
 end
+
+
+init()
 
