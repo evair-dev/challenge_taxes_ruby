@@ -6,7 +6,21 @@ class CashRegister
   end
 
   def show_receipt
+    taxes = 0.0
+    amount = 0.0
+    output = []
 
+    @products.each do |product| 
+      product_tax = calculate_taxes(product)
+      taxes += product_tax
+      amount += product[:value]
+      output.append("#{product[:quantity]} #{product[:name]}: #{'%.2f' % (product_tax + product[:value])}")
+    end
+
+    output.append("Sales Taxes: #{taxes}")
+    output.append("Total: #{amount + taxes}")
+    pp output
+    output
   end
 
   private

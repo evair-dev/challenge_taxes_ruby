@@ -40,7 +40,7 @@ RSpec.describe CashRegister do
     expect(@cash_register.send(:round_to_50, 1.28)).to eq(1.30)
   end
 
-  if 'show reciept' do
+  it 'show reciept' do
     expect(@cash_register.show_receipt).to eq([
       '1 imported box of chocolates: 10.50',
       '1 imported bottle of perfume: 54.65',
