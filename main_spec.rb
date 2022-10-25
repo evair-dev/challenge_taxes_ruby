@@ -33,4 +33,10 @@ RSpec.describe CashRegister do
     expect(@cash_register.send(:calculate_taxes, @cash_register.products[0])).to eq(0.5)
     expect(@cash_register.send(:calculate_taxes, @cash_register.products[1])).to eq(7.15)
   end
+
+  it 'get the correct rounded number' do
+    expect(@cash_register.send(:round_to_50, 1.22)).to eq(1.20)
+    expect(@cash_register.send(:round_to_50, 1.24)).to eq(1.25)
+    expect(@cash_register.send(:round_to_50, 1.28)).to eq(1.30)
+  end
 end
